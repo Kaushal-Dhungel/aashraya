@@ -35,7 +35,7 @@ class ProfileView(APIView):
 
 class UserProfileView(APIView):
     def get(self,request,format = None):
-        print(request.user)
+        # print(request.user)
         profile = Profile.objects.get(user = request.user.id)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
@@ -56,7 +56,7 @@ class UserProfileView(APIView):
         return Response(serializer.data)
 
     def patch(self,request,*args, **kwargs):
-        print(request.data)
+        # print(request.data)
         profile = Profile.objects.get(user = request.user.id)
 
         try:
@@ -74,6 +74,6 @@ class UserProfileView(APIView):
             return Response("Update is successful")
         
         except Exception as e:
-            print(e)   
+            # print(e)   
             return Response("Update failed")
     

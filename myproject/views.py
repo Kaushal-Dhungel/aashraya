@@ -15,7 +15,7 @@ def homeView (request,*args, **kwargs):
 class RegisterUser(APIView):
 
     def post(self,request,*args, **kwargs):
-        print(request.data)
+        # print(request.data)
         username = request.data.get('username')
         email = request.data.get('email')
         password1 = request.data.get('password1')
@@ -43,13 +43,13 @@ class RegisterUser(APIView):
                 # newrequest = Request(uri=uri,http_method=http_method,body=body)
                 user.save()
                 newreq = requests.post(uri,body)
-                print(newreq.json())
+                # print(newreq.json())
                 return Response(newreq.json(),status= status.HTTP_201_CREATED)
             
             except IntegrityError:
                 return Response({'Username Already Exists. Please Try New Username'},status=status.HTTP_400_BAD_REQUEST)
 
             except Exception as e:
-                print(e)
-                print(e.__class__.__name__)
+                # print(e)
+                # print(e.__class__.__name__)
                 return Response({"Unknown Error Occured. Please Try Later"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

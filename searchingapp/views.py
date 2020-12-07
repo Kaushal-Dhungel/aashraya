@@ -15,10 +15,10 @@ class ItemView(APIView):
     def get(self,request,category,format= None):
         # snippets = Item.objects.filter(category = category)
         city = request.query_params.get('city')
-        print(city)
-        print(category)
+        # print(city)
+        # print(category)
         snippets = Item.objects.filter(city__iexact = city,category = category)
-        print(snippets)
+        # print(snippets)
         serializer = ItemSerializer(snippets, many=True)
         return Response(serializer.data)
 
@@ -30,8 +30,8 @@ class ViewItem(APIView):
         return Response(serializer.data)
 
     def post(self,request,format = None):
-        print(request.data)
-        print(request.data.getlist('photos'))
+        # print(request.data)
+        # print(request.data.getlist('photos'))
         profile = Profile.objects.get(user = request.user.id)
 
         newdict = {
@@ -67,7 +67,7 @@ class ViewItem(APIView):
             return Response(responses)
 
         except Exception as e:
-            print(e)
+            # print(e)
             return Response("Thats bad mate")
 
 
@@ -102,19 +102,20 @@ class ItemDetailView(APIView):
         if request.data.get('action') == 'remove_img':
             # print(request.data)
             img_id = request.data.get('img_id')
-            print(img_id,item_id)
+            # print(img_id,item_id)
 
             img = Image.objects.get(id = img_id)
             img.delete()
 
         
         else:
-            print(request.data)
+            # print(request.data)
             try:
                 for img in request.data.getlist('photos'):
                     Image.objects.create(item = item,image = img)
             except Exception as e:
-                print(e)
+                # print(e)
+                return Response({'sorry'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
         serializer = ItemSerializer(item)
@@ -124,8 +125,8 @@ class ItemDetailView(APIView):
 
 # slug is changing everytime 
     def put(self,request,slug,*args, **kwargs):
-        print(slug)
-        print(request.data)
+        # print(slug)
+        # print(request.data)
         item = Item.objects.get(slug = slug)
         profile = Profile.objects.get(user = request.user.id)
 

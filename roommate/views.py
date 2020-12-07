@@ -26,8 +26,8 @@ class ViewRoomie(APIView):
         return Response(serializer.data)
 
     def post(self,request,format = None):
-        print(request.data)
-        print(request.data.getlist('photos'))
+        # print(request.data)
+        # print(request.data.getlist('photos'))
         profile = Profile.objects.get(user = request.user.id)
 
         newdict = {
@@ -65,7 +65,7 @@ class ViewRoomie(APIView):
             return Response(responses)
 
         except Exception as e:
-            print(e)
+            # print(e)
             return Response("Thats bad mate")
 
 
@@ -97,19 +97,20 @@ class RoomieDetailView(APIView):
         if request.data.get('action') == 'remove_img':
             # print(request.data)
             img_id = request.data.get('img_id')
-            print(img_id,item_id)
+            # print(img_id,item_id)
 
             img = RoomieImage.objects.get(id = img_id)
             img.delete()
 
         
         else:
-            print(request.data)
+            # print(request.data)
             try:
                 for img in request.data.getlist('photos'):
                     RoomieImage.objects.create(roomie = roomie,image = img)
             except Exception as e:
-                print(e)
+                # print(e)
+                return Response({'sorry'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
         serializer = RoomieSerializer(roomie)
@@ -119,8 +120,8 @@ class RoomieDetailView(APIView):
 
 # slug is changing everytime 
     def put(self,request,slug,*args, **kwargs):
-        print(slug)
-        print(request.data)
+        # print(slug)
+        # print(request.data)
         item = Roomie.objects.get(slug = slug)
         profile = Profile.objects.get(user = request.user.id)
 
@@ -152,5 +153,5 @@ class RoomiePostView(APIView):
             serializer = RoomieSerializer(snippets,many = True)
             return Response(serializer.data)
         except Exception as e:
-            print(e)
+            # print(e)
             return Response([])
