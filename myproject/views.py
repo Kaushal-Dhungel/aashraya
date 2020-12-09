@@ -20,7 +20,8 @@ class RegisterUser(APIView):
         email = request.data.get('email')
         password1 = request.data.get('password1')
         password2 = request.data.get('password2')
-
+        client_id = request.data.get('client_id')
+        client_secret = request.data.get('client_secret')
 
         if password1 != password2:
             return Response({"Your password1 and password2 didn't match"},status=status.HTTP_400_BAD_REQUEST)
@@ -34,8 +35,8 @@ class RegisterUser(APIView):
                 uri = 'http://localhost:8000/auth/token'
                 http_method='POST'
                 body = {
-                    'client_id' : '7GaNfuodxtkhUeVKHqE4ZAapgPwD4SwE0BQ5F9T0',
-                    'client_secret' : '2Zt7tpt6R6osAgVlC5iRxgo7rUVT31PgOkcxfGENl1BJ29x4KGs0PvWmvPbd6edHB0JFlb2BaFhXcuYT6kEJav1bBHWQJwcFYhURpgoghpMuPlffveCsARTN9vhGtaKi',
+                    'client_id' : client_id,
+                    'client_secret' : client_secret,
                     'grant_type' : 'password',
                     'username': username,
                     'password': password1,
