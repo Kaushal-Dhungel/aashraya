@@ -2,3 +2,6 @@ staticfiles
 media/avatars
 media/imgs
 media/roomie
+.env 
+db.sqlite3 
+aashraya

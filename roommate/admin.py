@@ -5,3 +5,4 @@ from .models import *
 
 admin.site.register(Roomie)
 admin.site.register(RoomieImage)
+admin.site.register(RoomieCartItem)

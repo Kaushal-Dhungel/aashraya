@@ -3,22 +3,28 @@ from .models import *
 from rest_framework.views import APIView
 from .serializers import *
 from rest_framework.response import Response
-from django.http import Http404
+from django.http import Http404, response
 from userprofile.models import Profile
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
-# Create your views here.
+from django.db.models import Max
 
 class ItemView(APIView):
 
     def get(self,request,category,format= None):
         # snippets = Item.objects.filter(category = category)
         city = request.query_params.get('city')
-        # print(city)
-        # print(category)
-        snippets = Item.objects.filter(city__iexact = city,category = category)
-        # print(snippets)
+        minPrice = request.query_params.get('minPrice')
+        maxPrice = request.query_params.get('maxPrice')
+
+        if maxPrice == "-1":
+            maxPrice = Item.objects.aggregate(Max("price")) ['price__max']
+
+        print(minPrice,maxPrice)
+
+        print(city)
+        snippets = Item.objects.filter(location_customised__iexact = city,category = category,price__gte = minPrice, price__lte = maxPrice   )
         serializer = ItemSerializer(snippets, many=True)
         return Response(serializer.data)
 
@@ -39,11 +45,17 @@ class ViewItem(APIView):
             'category': request.data['category'],
             'headline': request.data['headline'],
             'location': request.data['location'],
-            'city': request.data['city'],
+            'location_customised' : 'random',
+            'latitude': request.data['latitude'],
+            'longitude': request.data['longitude'],
             'price': request.data['price'],
             'details': request.data['details'],
             'slug': 'abc',            
         }
+
+        print(request.data['latitude'])
+        print(request.data['longitude'])
+        print(request.data['location'])
 
         try:
             serializer = ItemSerializer(data = newdict)
@@ -67,7 +79,7 @@ class ViewItem(APIView):
             return Response(responses)
 
         except Exception as e:
-            # print(e)
+            print(e)
             return Response("Thats bad mate")
 
 
@@ -135,7 +147,9 @@ class ItemDetailView(APIView):
             'category': request.data['category'],
             'headline': request.data['headline'],
             'location': request.data['location'],
-            'city': request.data['city'],
+            'location_customised' : item.location_customised,
+            'latitude': request.data['latitude'],
+            'longitude': request.data['longitude'],
             'price': request.data['price'],
             'details': request.data['details'],
             'slug': item.slug,            
@@ -148,13 +162,44 @@ class ItemDetailView(APIView):
         # return Response()
 
 
+class CartView(APIView):
+
+    def get(self,request,format = None):
+        profile = Profile.objects.get(user = request.user.id)
+
+        snippets = CartItem.objects.filter(profile = profile)
+        serializer = CartItemSerializer(snippets, many=True)
+        return Response(serializer.data)
+
+    def post(self,request,*args, **kwargs):
+
+        item_id = request.data.get('id')
+        action = request.data.get("action")
+        item = Item.objects.get(id = item_id)
+        profile = Profile.objects.get(user = request.user.id)
+
+        try:
+            if action == "add":
+                cart_item, is_created = CartItem.objects.get_or_create(item = item, profile = profile)
+                
+                print(is_created)
+                if is_created:
+                    serializer = CartItemSerializer(cart_item)
+                    return Response(serializer.data,status=status.HTTP_201_CREATED)
+                else :
+                    return Response({"Already exists"},status=status.HTTP_201_CREATED)
+
+            else:
+                cart_item = CartItem.objects.get(item = item)
+                cart_item.delete()
+                return Response({"Removal Successful"},status=status.HTTP_201_CREATED)
+        
+        except Exception as e:
+            print(e)
+            return Response({"Removal Successful"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-
-
-
-
+        # return Response({"okay"},status=status.HTTP_201_CREATED)
 
 
 # class ImageView(APIView):

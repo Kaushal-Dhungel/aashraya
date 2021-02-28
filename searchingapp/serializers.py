@@ -20,3 +20,9 @@ class ItemSerializer(serializers.ModelSerializer):
     #     print(instance)
     #     response['profile']=ProfileSerializer(instance.profile).data
     #     return response
+
+class CartItemSerializer(serializers.ModelSerializer):
+    item = ItemSerializer(read_only = True)
+    class Meta:
+        model = CartItem
+        fields = "__all__"  

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 from userprofile.models import Profile
 from django.template.defaultfilters import slugify
 
@@ -19,7 +20,9 @@ class Item(models.Model):
     category = models.CharField(max_length=30, choices = CHOICES)
     headline = models.CharField(max_length=400,null= False, blank = False)
     location = models.CharField(max_length=200,null= False, blank = False)
-    city = models.CharField(max_length=200,null= False, blank = False)
+    location_customised = models.CharField(max_length=200,null= False, blank = False)
+    latitude = models.CharField(max_length=200,null= False, blank = False)
+    longitude = models.CharField(max_length=200,null= False, blank = False)
     price = models.DecimalField(max_digits= 10, decimal_places=2)
     details = models.TextField(null= False, blank = False)
     updated = models.DateTimeField(auto_now=True)
@@ -48,6 +51,13 @@ class Item(models.Model):
  
         self.slug = slug
 
+        location = self.location.split(",")  # first separate using comma
+        location = "".join(i.strip() for i in location)
+        location = location.split(" ")      # separate using white space
+        location = "".join(i.strip() for i in location)  
+        
+        self.location_customised = location
+
         super().save(*args, **kwargs)
 
     
@@ -62,3 +72,12 @@ class Image(models.Model):
 
     def __str__(self):
         return str(f"{self.item}---{self.id}")
+
+
+class CartItem(models.Model):
+    item = models.OneToOneField(Item,on_delete = models.CASCADE,related_name="cart_items")
+    profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
+    def __str__(self):
+        return str(f"{self.item}---{self.profile.user.username}")
+
+    

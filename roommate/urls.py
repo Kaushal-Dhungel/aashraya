@@ -7,5 +7,7 @@ urlpatterns = [
     # path("image/img/",ImageView.as_view()),
     path("",ViewRoomie.as_view()),
     path("roomie/<slug>/",RoomiePostView.as_view()),
+    path("roomiecart",RoomieCartView.as_view()),
+
 
 ]

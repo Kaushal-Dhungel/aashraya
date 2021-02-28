@@ -12,3 +12,9 @@ class RoomieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Roomie
         fields = "__all__"
+
+class RoomieCartItemSerializer(serializers.ModelSerializer):
+    item = RoomieSerializer(read_only = True)
+    class Meta:
+        model = RoomieCartItem
+        fields = "__all__"  

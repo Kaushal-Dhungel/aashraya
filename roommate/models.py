@@ -40,7 +40,9 @@ class Roomie(models.Model):
     category = models.CharField(max_length=30, choices = CHOICES)
     headline = models.CharField(max_length=400,null= False, blank = False)
     location = models.CharField(max_length=200,null= False, blank = False)
-    city = models.CharField(max_length=200,null= False, blank = False)
+    location_customised = models.CharField(max_length=200,null= False, blank = False)
+    latitude = models.CharField(max_length=200,null= False, blank = False)
+    longitude = models.CharField(max_length=200,null= False, blank = False)
     price_range = models.CharField(max_length=200,choices = CHOICES_PRICE)
     sex_pref = models.CharField(max_length=200,choices = CHOICES_SEX)
     age_pref = models.CharField(max_length=200,choices = CHOICES_AGE)
@@ -70,6 +72,13 @@ class Roomie(models.Model):
  
         self.slug = slug
 
+        location = self.location.split(",")  # first separate using comma
+        location = "".join(i.strip() for i in location)
+        location = location.split(" ")      # separate using white space
+        location = "".join(i.strip() for i in location)  
+        
+        self.location_customised = location
+
         super().save(*args, **kwargs)
 
 class RoomieImage(models.Model):
@@ -83,3 +92,9 @@ class RoomieImage(models.Model):
 
     def __str__(self):
         return str(f"{self.roomie}---{self.id}")
+
+class RoomieCartItem(models.Model):
+    item = models.OneToOneField(Roomie,on_delete = models.CASCADE,related_name="cart_roomie")
+    profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
+    def __str__(self):
+        return str(f"{self.item}---{self.profile.user.username}")

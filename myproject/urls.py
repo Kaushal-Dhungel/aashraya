@@ -35,6 +35,8 @@ urlpatterns = [
     path('profile/', include('userprofile.urls')),
     path('items/', include('searchingapp.urls')),
     path('mates/', include('roommate.urls')),
+    path('core/', include('core.urls')),
+
     # path('chat/',include('chatapp.urls')),
 	url(r'^media/(?P<path>.*)$', serve,{'document_root':settings.MEDIA_ROOT}), 
     url(r'^static/(?P<path>.*)$', serve,{'document_root':settings.STATIC_ROOT}), 

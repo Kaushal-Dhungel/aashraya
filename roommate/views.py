@@ -13,8 +13,14 @@ class RoomieView(APIView):
     def get(self,request,category,format= None):
         # snippets = Roomie.objects.all()
         city = request.query_params.get('city')
-        snippets = Roomie.objects.filter(city__iexact = city,category = category)
-        # print(snippets)
+        priceRange = request.query_params.get('priceRange')
+        print(city,priceRange)
+        if priceRange == "0":
+            snippets = Roomie.objects.filter(location_customised__iexact = city,category = category)
+        
+        else :
+            snippets = Roomie.objects.filter(location_customised__iexact = city,category = category,price_range = priceRange)
+
         serializer = RoomieSerializer(snippets, many=True)
         return Response(serializer.data)
 
@@ -35,7 +41,9 @@ class ViewRoomie(APIView):
             'category': request.data['category'],
             'headline': request.data['headline'],
             'location': request.data['location'],
-            'city': request.data['city'],
+            'location_customised' : 'random',
+            'latitude': request.data['latitude'],
+            'longitude': request.data['longitude'],
             'price_range': request.data['price_range'],
             'sex_pref': request.data['sex_pref'],
             'age_pref': request.data['age_pref'],
@@ -130,7 +138,9 @@ class RoomieDetailView(APIView):
             'category': request.data['category'],
             'headline': request.data['headline'],
             'location': request.data['location'],
-            'city': request.data['city'],
+            'location_customised' : item.location_customised,
+            'latitude': request.data['latitude'],
+            'longitude': request.data['longitude'],
             'price_range': request.data['price_range'],
             'sex_pref': request.data['sex_pref'],
             'age_pref': request.data['age_pref'],
@@ -155,3 +165,34 @@ class RoomiePostView(APIView):
         except Exception as e:
             # print(e)
             return Response([])
+
+class RoomieCartView(APIView):
+
+    def get(self,request,format = None):
+        profile = Profile.objects.get(user = request.user.id)
+        print(profile)
+        snippets = RoomieCartItem.objects.filter(profile = profile)
+        serializer = RoomieCartItemSerializer(snippets, many=True)
+        return Response(serializer.data)
+
+    def post(self,request,*args, **kwargs):
+
+        item_id = request.data.get('id')
+        action = request.data.get("action")
+        item = Roomie.objects.get(id = item_id)
+        profile = Profile.objects.get(user = request.user.id)
+        
+        if action == "add":
+            cart_item, is_created = RoomieCartItem.objects.get_or_create(item = item, profile = profile)
+            
+            if is_created:
+                serializer = RoomieCartItemSerializer(cart_item)
+                return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+            else :
+                return Response({"Already exists"})
+
+        else:
+            cart_item = RoomieCartItem.objects.get(item = item)
+            cart_item.delete()
+            return Response({"Removal Successful"},status=status.HTTP_201_CREATED)

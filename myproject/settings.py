@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from typing import Deque
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!s$$tt#%6z19#*ptvc43^ea-w#5s6&4#8p#=y!#kfe(fy9&b8p'
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+
+DEBUG = os.getenv('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1','aashraya.herokuapp.com']
 
@@ -41,9 +46,13 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
 
+    'cloudinary_storage',
+    'cloudinary',
+
     'userprofile',
     'searchingapp',
     'roommate',
+    'core',
     # 'chatapp',
     # 'rest_framework.authtoken',
     # 'rest_auth',
@@ -110,7 +119,16 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'd3h67l1vq4o4bp',
@@ -119,7 +137,7 @@ DATABASES = {
         'USER': 'ljskztploaewdr',
         'PASSWORD': 'b7cce819f60a13400499c8e1800259a98a8bb84dff0e30e6244871bc6ddbf05d',
     }
-}
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -164,7 +182,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': str(os.getenv('CLOUD_NAME')),
+    'API_KEY': str(os.getenv('API_KEY')),
+    'API_SECRET': str(os.getenv('API_SECRET'))
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -210,5 +234,4 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email'
 }
-
 
