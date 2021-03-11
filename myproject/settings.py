@@ -225,8 +225,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Facebook configuration
-SOCIAL_AUTH_FACEBOOK_KEY = '710285926273589'
-SOCIAL_AUTH_FACEBOOK_SECRET = '8de43acbc22ffba9dcad50530309b28f'
+SOCIAL_AUTH_FACEBOOK_KEY = str(os.getenv('SOCIAL_AUTH_FACEBOOK_KEY'))
+SOCIAL_AUTH_FACEBOOK_SECRET = str(os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET'))
 
 # Define SOCIAL_AUTH_FACEBOOK_SCOPE to get extra permissions from Facebook.
 # Email is not sent by default, to get it, you must request the email permission.
