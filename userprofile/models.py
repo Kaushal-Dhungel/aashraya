@@ -11,7 +11,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=200, blank=True)
     email = models.EmailField(max_length=200, blank=True)
     phone = models.CharField(max_length=200, blank=True)
-    avatar = models.ImageField(default='avatar_qlg7p2.png', upload_to='avatars/') # django auto creates 'avatars' folder
+    avatar = models.ImageField(default='media/avatars/avatar.png', upload_to='avatars/') # django auto creates 'avatars' folder
     facebook_link = models.CharField(max_length=200, blank=True)
     twitter_link = models.CharField(max_length=200, blank=True)
     instagram_link = models.CharField(max_length=200, blank=True)
