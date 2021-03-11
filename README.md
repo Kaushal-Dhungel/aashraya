@@ -1,6 +1,6 @@
 # Aashraya
 
-![main img](https://github.com/Kaushal-Dhungel/aashraya/blob/master/thumbnails/first.png)
+![main img](https://github.com/Kaushal-Dhungel/aashraya/blob/master/thumbnails/ss2.png)
 
 [Click here to visit the app](https://aashraya.netlify.app/)
 
