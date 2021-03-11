@@ -10,4 +10,6 @@ Similarly, one can list him/herself as a roommate.
 
 This is the backend of the Aashraya app. It is written using Django Rest Framework and is hosted in Heroku.
 Frontend Part is written in React and is hosted in Netlify.
+[Go to Frontend](https://github.com/Kaushal-Dhungel/aashraya_react)
+
 The frontend and backend are comletely separated and connect only using the rest apis.
