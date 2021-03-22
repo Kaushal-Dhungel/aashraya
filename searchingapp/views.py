@@ -161,6 +161,16 @@ class ItemDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         # return Response()
 
+    def delete(self,request,slug,*args, **kwargs):
+        print(slug)
+        try:
+            item = Item.objects.get(slug = slug)
+            item.delete()
+            return Response({'deleted'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'sorry'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class CartView(APIView):
 

@@ -124,6 +124,17 @@ class RoomieDetailView(APIView):
         serializer = RoomieSerializer(roomie)
 
         return Response(serializer.data)
+
+    def delete(self,request,slug,*args, **kwargs):
+        try:
+            roomie = Roomie.objects.get(slug = slug)
+            roomie.delete()
+            return Response({'deleted'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print (e)
+            return Response({'sorry'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
       
 
 # slug is changing everytime 
