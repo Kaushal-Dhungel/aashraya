@@ -5,10 +5,9 @@ from .serializers import *
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
-import base64
-import hashlib
-import hmac
-import json
+
+from django.contrib.auth.models import User
+
 
 import os
 from dotenv import load_dotenv
@@ -88,7 +87,8 @@ class UserProfileView(APIView):
     def delete(self, request, *args, **kwargs):
         try:
             profile = Profile.objects.get(user = request.user.id)
-            profile.delete()
+            user = User.objects.get(profile__id = profile.id)
+            user.delete()
             return Response({"Deleted"},status=status.HTTP_200_OK)
 
         except Exception as e:

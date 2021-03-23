@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.conf import settings
+
 # from oauthlib.common import Request
 from django.db import IntegrityError
 import json
@@ -32,7 +34,11 @@ class RegisterUser(APIView):
             
             try:
                 user = User.objects.create_user(username, email, password1)
-                uri = 'http://localhost:8000/auth/token'
+                uri = 'https://aashraya.herokuapp.com/auth/token'
+
+                if settings.DEBUG:
+                    uri = 'http://localhost:8000/auth/token'
+
                 http_method='POST'
                 body = {
                     'client_id' : client_id,
@@ -54,3 +60,32 @@ class RegisterUser(APIView):
                 # print(e)
                 # print(e.__class__.__name__)
                 return Response({"Unknown Error Occured. Please Try Later"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class CheckUser(APIView):
+    def get(self,request,*args,**kwargs):
+
+        username = request.query_params.get('username')
+        email = request.query_params.get('email')
+        if email == '':
+            try:
+                User.objects.get(username = username)
+                return Response({'True'},status=status.HTTP_200_OK)
+
+            except User.DoesNotExist:
+                return Response({"False"},status = status.HTTP_200_OK)
+
+            except Exception as e:
+                print (e)
+                return Response({'Some error occured'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        else:
+            try:
+                User.objects.get(email = email)
+                return Response({'True'},status=status.HTTP_200_OK)
+
+            except User.DoesNotExist:
+                return Response({"False"},status = status.HTTP_200_OK)
+
+            except Exception as e:
+                print (e)
+                return Response({'Some error occured'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
