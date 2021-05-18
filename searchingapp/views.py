@@ -26,14 +26,14 @@ class ItemView(APIView):
         print(city)
         snippets = Item.objects.filter(location_customised__iexact = city,category = category,price__gte = minPrice, price__lte = maxPrice   )
         serializer = ItemSerializer(snippets, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ViewItem(APIView):
     def get(self,request,format = None):
         snippets = Item.objects.all()
         serializer = ItemSerializer(snippets, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request,format = None):
         # print(request.data)
@@ -76,11 +76,11 @@ class ViewItem(APIView):
                 "slug" : serializer.data['slug'],
                 "text" : "Addtion successful"
             }
-            return Response(responses)
+            return Response(responses,status=status.HTTP_201_CREATED)
 
         except Exception as e:
             print(e)
-            return Response("Thats bad mate")
+            return Response("Thats bad mate",status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     # def patch(self,request,*args, **kwargs):
@@ -104,7 +104,7 @@ class ItemDetailView(APIView):
         
         serializer = ItemSerializer(snippets)
         
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
     
     def post(self,request, *args, **kwargs):
         
@@ -126,13 +126,13 @@ class ItemDetailView(APIView):
                 for img in request.data.getlist('photos'):
                     Image.objects.create(item = item,image = img)
             except Exception as e:
-                # print(e)
+                print(e)
                 return Response({'sorry'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
         serializer = ItemSerializer(item)
 
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
       
 
 # slug is changing everytime 
@@ -179,7 +179,7 @@ class CartView(APIView):
 
         snippets = CartItem.objects.filter(profile = profile)
         serializer = CartItemSerializer(snippets, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request,*args, **kwargs):
 
@@ -196,13 +196,13 @@ class CartView(APIView):
                 if is_created:
                     serializer = CartItemSerializer(cart_item)
                     return Response(serializer.data,status=status.HTTP_201_CREATED)
-                else :
+                else:
                     return Response({"Already exists"},status=status.HTTP_201_CREATED)
 
             else:
                 cart_item = CartItem.objects.get(item = item)
                 cart_item.delete()
-                return Response({"Removal Successful"},status=status.HTTP_201_CREATED)
+                return Response({"Removal Successful"},status=status.HTTP_200_OK)
         
         except Exception as e:
             print(e)
