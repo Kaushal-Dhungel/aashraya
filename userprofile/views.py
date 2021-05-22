@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 import os
 from dotenv import load_dotenv
 load_dotenv()
-# Create your views here.
 
 # class ProfileView(APIView):
 
@@ -33,12 +32,10 @@ class ProfileView(APIView):
         except Profile.DoesNotExist:
             raise Http404
 
-
     def get(self, request,slug, format=None):
         snippets = self.get_object(slug)
-        
         serializer = ProfileSerializer(snippets)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
     def get(self,request,format = None):
@@ -46,8 +43,6 @@ class UserProfileView(APIView):
         profile = Profile.objects.get(user = request.user.id)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
-
-
 
     def post(self,request,*args, **kwargs):
         profile = Profile.objects.get(user = request.user.id)
@@ -60,7 +55,7 @@ class UserProfileView(APIView):
         
         profile.save()
         serializer = ProfileSerializer(profile)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self,request,*args, **kwargs):
         # print(request.data)
