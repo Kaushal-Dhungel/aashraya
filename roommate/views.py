@@ -22,14 +22,14 @@ class RoomieView(APIView):
             snippets = Roomie.objects.filter(location_customised__iexact = city,category = category,price_range = priceRange)
 
         serializer = RoomieSerializer(snippets, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 class ViewRoomie(APIView):
     def get(self,request,*args, **kwargs):
         profile = Profile.objects.get(user= request.user)
         snippets = Roomie.objects.filter(profile = profile )
         serializer = RoomieSerializer(snippets, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request,format = None):
         # print(request.data)
@@ -70,7 +70,7 @@ class ViewRoomie(APIView):
                 "slug" : serializer.data['slug'],
                 "text" : "Addtion successful"
             }
-            return Response(responses)
+            return Response(responses,status=status.HTTP_201_CREATED)
 
         except Exception as e:
             # print(e)
@@ -94,7 +94,7 @@ class RoomieDetailView(APIView):
         
         serializer = RoomieSerializer(snippets)
         
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
     
     def post(self,request, *args, **kwargs):
@@ -123,7 +123,7 @@ class RoomieDetailView(APIView):
 
         serializer = RoomieSerializer(roomie)
 
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
     def delete(self,request,slug,*args, **kwargs):
         try:
@@ -172,10 +172,10 @@ class RoomiePostView(APIView):
             profile = Profile.objects.get(slug = slug)
             snippets = Roomie.objects.filter(profile = profile)
             serializer = RoomieSerializer(snippets,many = True)
-            return Response(serializer.data)
+            return Response(serializer.data,status=status.HTTP_200_OK)
         except Exception as e:
             # print(e)
-            return Response([])
+            return Response([],status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class RoomieCartView(APIView):
 
@@ -184,7 +184,7 @@ class RoomieCartView(APIView):
         print(profile)
         snippets = RoomieCartItem.objects.filter(profile = profile)
         serializer = RoomieCartItemSerializer(snippets, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request,*args, **kwargs):
 
@@ -201,9 +201,9 @@ class RoomieCartView(APIView):
                 return Response(serializer.data,status=status.HTTP_201_CREATED)
 
             else :
-                return Response({"Already exists"})
+                return Response({"Already exists"},status=status.HTTP_201_CREATED)
 
         else:
             cart_item = RoomieCartItem.objects.get(item = item)
             cart_item.delete()
-            return Response({"Removal Successful"},status=status.HTTP_201_CREATED)
+            return Response({"Removal Successful"},status=status.HTTP_200_OK)
