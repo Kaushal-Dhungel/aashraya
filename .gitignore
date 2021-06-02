@@ -2,6 +2,8 @@ staticfiles
 media/avatars
 media/imgs
 media/roomie
+media/Popular
+media/People
 .env 
 db.sqlite3 
 aashraya

@@ -6,8 +6,8 @@ from roommate.views import  *
 class TestRoomieUrls(SimpleTestCase):
 
     def test_roomie_view(self):
-        url = resolve(reverse("roomieView",args = ["test_category"]))
-        self.assertEquals(url.func.view_class,RoomieView) 
+        url = resolve(reverse("roomieFilterView",args = ["test_category"]))
+        self.assertEquals(url.func.view_class,RoomieFilterView) 
 
     def test_roomie_details(self):
         url = resolve(reverse("roomieDetails",args = ["test_slug"]))
@@ -18,8 +18,8 @@ class TestRoomieUrls(SimpleTestCase):
         self.assertEquals(url.func.view_class,RoomieCartView) 
 
     def test_view_roomie(self):
-        url = resolve(reverse("viewRoomie"))
-        self.assertEquals(url.func.view_class,ViewRoomie) 
+        url = resolve(reverse("roomieView"))
+        self.assertEquals(url.func.view_class,RoomieView) 
 
     def test_roomit_post(self):
         url = resolve(reverse('roomiePost',args = ["test_slug"]))

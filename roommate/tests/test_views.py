@@ -22,9 +22,9 @@ class CommonTestClass(APITestCase):
         self.client.force_authenticate(user = self.user)
 
 
-class TestRoomieView(CommonTestClass):
+class TestRoomieFilterView(CommonTestClass):
 
-    url = reverse('roomieView',args = ['room'])
+    url = reverse('roomieFilterView',args = ['room'])
 
     def test_get_with_priceRange(self):
         data = {'city':'abcdef','priceRange':'0-5000'}
@@ -38,16 +38,16 @@ class TestRoomieView(CommonTestClass):
         self.assertEquals(res.status_code,200)
 
 
-class TestViewRoomie(CommonTestClass):
+class TestRoomieView(CommonTestClass):
 
-    url = reverse('viewRoomie')
+    url = reverse('roomieView')
 
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEquals(res.status_code,200)
 
     def test_post(self):
-        img_path = settings.BASE_DIR/'media/People/elon.jpg'
+        img_path = settings.BASE_DIR/'media/elon.jpg'
         img = SimpleUploadedFile(name='elon.jpg', content=open(img_path, 'rb').read(), content_type='image/jpeg')
         data = {
             'category': 'room',
@@ -70,7 +70,7 @@ class TestViewRoomie(CommonTestClass):
 
 
 class TestRoomieDetailView(CommonTestClass):
-    img_path = settings.BASE_DIR/'media/People/elon.jpg'
+    img_path = settings.BASE_DIR/'media/elon.jpg'
     image_file = SimpleUploadedFile(name='elon.jpg', content=open(img_path, 'rb').read(), content_type='image/jpeg')
 
     def get_url(self):

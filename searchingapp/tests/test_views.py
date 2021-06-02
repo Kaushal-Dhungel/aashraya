@@ -5,28 +5,9 @@ from datetime import date,timedelta
 from searchingapp.models import *
 import json
 
-# from io import StringIO, BytesIO
-# from django.core.files import File
-# from django.utils.six import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 
-
-# def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
-#    """
-#    Generate a test image, returning the filename that it was saved as.
-
-#    If ``storage`` is ``None``, the BytesIO containing the image data
-#    will be passed instead.
-#    """
-#    data = BytesIO()
-#    img = Image.new(image_mode, size).save(data, image_format)
-#    return img
-#    data.seek(0)
-#    if not storage:
-#        return data
-#    image_file = ContentFile(data.read())
-#    return storage.save(filename, image_file)
 
 class CommonTestClass(APITestCase):
 
@@ -39,9 +20,9 @@ class CommonTestClass(APITestCase):
         self.client.force_authenticate(user = self.user)
 
 
-class TestItemView(CommonTestClass):
+class TestItemFilterView(CommonTestClass):
 
-    url = reverse('itemView',args = ['room'])
+    url = reverse('itemFilterView',args = ['room'])
 
     def test_get(self):
         data = {'city':'abcdef','minPrice':30 , 'maxPrice': 90}
@@ -50,16 +31,16 @@ class TestItemView(CommonTestClass):
 
     # todo test get with differernt filter in minPrice and maxPrice
 
-class TestViewItem(CommonTestClass):
-
-    url = reverse('viewItem')
+class TestItemView(CommonTestClass):
+    
+    url = reverse('itemView')
 
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEquals(res.status_code,200)
 
     def test_post(self):
-        img_path = settings.BASE_DIR/'media/People/elon.jpg'
+        img_path = settings.BASE_DIR/'media/elon.jpg'
         img = SimpleUploadedFile(name='elon.jpg', content=open(img_path, 'rb').read(), content_type='image/jpeg')
         data = {
             'category': 'room',
@@ -81,7 +62,7 @@ class TestViewItem(CommonTestClass):
 
 class TestItemDetailiew(CommonTestClass):
 
-    img_path = settings.BASE_DIR/'media/People/elon.jpg'
+    img_path = settings.BASE_DIR/'media/elon.jpg'
     image_file = SimpleUploadedFile(name='elon.jpg', content=open(img_path, 'rb').read(), content_type='image/jpeg')
 
     def get_img(self):

@@ -13,35 +13,32 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-
 from django.views.static import serve
 from django.conf.urls import url
-from .views import *
+from core.views import homeView
 
 urlpatterns = [
-
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
-    path('registeruser/', RegisterUser.as_view()),
-    path('checkuser/', CheckUser.as_view()),
-	path('',homeView, name = "homeview"),
     # path('rest-auth/', include('rest_auth.urls')),
     # path('rest-auth/registration/', include('rest_auth.registration.urls')),
     # path('rest-auth/twitter/', TwitterLogin.as_view(), name='twitter_login'),
     # path('accounts/', include('allauth.urls')),
+
+	path('',homeView, name = "homeview"),
+    path('core/', include('core.urls')),
     path('profile/', include('userprofile.urls')),
     path('items/', include('searchingapp.urls')),
     path('mates/', include('roommate.urls')),
-    path('core/', include('core.urls')),
 
     # path('chat/',include('chatapp.urls')),
 	url(r'^media/(?P<path>.*)$', serve,{'document_root':settings.MEDIA_ROOT}), 
     url(r'^static/(?P<path>.*)$', serve,{'document_root':settings.STATIC_ROOT}), 
-
 
     path('auth/', include('drf_social_oauth2.urls', namespace='drf')),
 

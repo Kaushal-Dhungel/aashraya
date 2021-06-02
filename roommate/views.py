@@ -6,25 +6,25 @@ from rest_framework.response import Response
 from django.http import Http404
 from userprofile.models import Profile
 from rest_framework import status
-# Create your views here.
 
-class RoomieView(APIView):
 
+class RoomieFilterView(APIView):
     def get(self,request,category,format= None):
-        # snippets = Roomie.objects.all()
         city = request.query_params.get('city')
-        priceRange = request.query_params.get('priceRange')
-        print(city,priceRange)
-        if priceRange == "0":
+        price_range = request.query_params.get('priceRange')
+        
+        if price_range == "0":
             snippets = Roomie.objects.filter(location_customised__iexact = city,category = category)
         
         else :
-            snippets = Roomie.objects.filter(location_customised__iexact = city,category = category,price_range = priceRange)
+            snippets = Roomie.objects.filter(location_customised__iexact = city,category = category,price_range = price_range)
 
         serializer = RoomieSerializer(snippets, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-class ViewRoomie(APIView):
+class RoomieView(APIView):
+
+    # this get is for fetching the roomies for userprofile component
     def get(self,request,*args, **kwargs):
         profile = Profile.objects.get(user= request.user)
         snippets = Roomie.objects.filter(profile = profile )
@@ -32,8 +32,6 @@ class ViewRoomie(APIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request,format = None):
-        # print(request.data)
-        # print(request.data.getlist('photos'))
         profile = Profile.objects.get(user = request.user.id)
 
         newdict = {
@@ -73,56 +71,38 @@ class ViewRoomie(APIView):
             return Response(responses,status=status.HTTP_201_CREATED)
 
         except Exception as e:
-            # print(e)
-            return Response("Thats bad mate")
-
+            return Response("Thats bad mate",status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class RoomieDetailView(APIView):
-    """
-    List all snippets, or create a new snippet.
-    """
     def get_object(self, slug):
         try:
             return Roomie.objects.get(slug=slug)
         except Roomie.DoesNotExist:
             raise Http404
 
-
     def get(self, request,slug, format=None):
         snippets = self.get_object(slug)
-        
         serializer = RoomieSerializer(snippets)
-        
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-    
     def post(self,request, *args, **kwargs):
-        
         item_id = request.data.get('item_id')
         roomie = Roomie.objects.get(id = item_id)
 
         if request.data.get('action') == 'remove_img':
-            # print(request.data)
             img_id = request.data.get('img_id')
-            # print(img_id,item_id)
-
             img = RoomieImage.objects.get(id = img_id)
             img.delete()
-
         
         else:
-            # print(request.data)
             try:
                 for img in request.data.getlist('photos'):
                     RoomieImage.objects.create(roomie = roomie,image = img)
             except Exception as e:
-                # print(e)
                 return Response({'sorry'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
         serializer = RoomieSerializer(roomie)
-
         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
     def delete(self,request,slug,*args, **kwargs):
@@ -135,12 +115,9 @@ class RoomieDetailView(APIView):
             print (e)
             return Response({'sorry'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-      
 
-# slug is changing everytime 
+    # slug is changing everytime 
     def put(self,request,slug,*args, **kwargs):
-        # print(slug)
-        # print(request.data)
         item = Roomie.objects.get(slug = slug)
         profile = Profile.objects.get(user = request.user.id)
 
@@ -163,10 +140,9 @@ class RoomieDetailView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # return Response()
 
+# this is for fetching roomie in profile(not for userprofile) using slug, because items are fetched by default when the profile is rendered
 class RoomiePostView(APIView):
-
     def get(self,request,slug,format= None):
         try:
             profile = Profile.objects.get(slug = slug)
@@ -174,20 +150,16 @@ class RoomiePostView(APIView):
             serializer = RoomieSerializer(snippets,many = True)
             return Response(serializer.data,status=status.HTTP_200_OK)
         except Exception as e:
-            # print(e)
             return Response([],status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class RoomieCartView(APIView):
-
     def get(self,request,format = None):
         profile = Profile.objects.get(user = request.user.id)
-        print(profile)
         snippets = RoomieCartItem.objects.filter(profile = profile)
         serializer = RoomieCartItemSerializer(snippets, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request,*args, **kwargs):
-
         item_id = request.data.get('id')
         action = request.data.get("action")
         item = Roomie.objects.get(id = item_id)
@@ -200,7 +172,7 @@ class RoomieCartView(APIView):
                 serializer = RoomieCartItemSerializer(cart_item)
                 return Response(serializer.data,status=status.HTTP_201_CREATED)
 
-            else :
+            else:
                 return Response({"Already exists"},status=status.HTTP_201_CREATED)
 
         else:

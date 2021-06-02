@@ -38,7 +38,7 @@ class TestUserProfileView(APITestCase):
         self.assertEquals(res.status_code,200)
 
     def test_post_add_pic(self):
-        img_path = settings.BASE_DIR/'media/People/elon.jpg'
+        img_path = settings.BASE_DIR/'media/elon.jpg'
         img = SimpleUploadedFile(name='elon.jpg', content=open(img_path, 'rb').read(), content_type='image/jpeg')
         data = {'action':'add_pic','avatar':img}
 

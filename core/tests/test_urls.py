@@ -3,8 +3,16 @@ from django.urls import resolve, reverse
 
 from core.views import  *
 
-class TestRoomieUrls(SimpleTestCase):
+class TestCoreUrls(SimpleTestCase):
     
+    def test_registeruser(self):
+        url = resolve(reverse("register"))
+        self.assertEquals(url.func.view_class,RegisterUser) 
+
+    def test_checkuser(self):
+        url = resolve(reverse("checkuser"))
+        self.assertEquals(url.func.view_class,CheckUser) 
+
     def test_popular(self):
         url = resolve(reverse("popular"))
         self.assertEquals(url.func.view_class,PopularView) 

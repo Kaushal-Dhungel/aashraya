@@ -13,7 +13,7 @@ from django.conf import settings
 
 class TestModel(TestCase):
  
-    img_path = settings.BASE_DIR/'media/People/elon.jpg'
+    img_path = settings.BASE_DIR/'media/elon.jpg'
     img = SimpleUploadedFile(name='elon.jpg', content=open(img_path, 'rb').read(), content_type='image/jpeg')
 
     def setUp(self):

@@ -4,7 +4,6 @@ from .utils import get_random_code
 from django.template.defaultfilters import slugify
 # Create your models here.
 
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=200, blank=True)
@@ -30,85 +29,60 @@ class Profile(models.Model):
     def get_email(self):
         return self.user.email
 
-    # __initial_first_name = None
-    # __initial_last_name = None
-
-    # __initial_first_name = user.first_name
-    # __initial_last_name = user.last_name
-
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.__initial_first_name = self.first_name
-    #     self.__initial_last_name = self.last_name
-
-
-
-    # def save(self, *args, **kwargs):
-    #     ex = False
-    #     to_slug = self.slug
-    #     if self.first_name != self.__initial_first_name or self.last_name != self.__initial_last_name or self.slug=="":
-    #         if self.first_name and self.last_name:
-    #             to_slug = slugify(str(self.first_name) + " " + str(self.last_name))
-    #             ex = Profile.objects.filter(slug=to_slug).exists()
-    #             while ex:
-    #                 to_slug = slugify(to_slug + " " + str(get_random_code()))
-    #                 ex = Profile.objects.filter(slug=to_slug).exists()
-    #         else:
-    #             to_slug = str(self.user)
-        
-
-    #     self.slug = to_slug
-        
-    #     super().save(*args, **kwargs)
-
-
     def save(self,*args, **kwargs):
-
         fname = self.user.first_name
         lname = self.user.last_name
         email = self.user.email 
 
-        if email != '':
-            if self.email == '':
+        # if user model HAS email
+        if email != '':  
+            if self.email == '':  # but profile doesn't have, means when tried to remove the email, but we don't do that here, haha
                 self.email = email
             
-            else:
+            else:                  # and profile have it as well, means the profile/email is probably going to be updated,
                 self.email = self.email
-                self.user.email = self.email
+                self.user.email = self.email   # need to update the user model's email as well
                 self.user.save()
-                
+
+        # this doesn't happpen coz email is made mandatory for registration
+        # if user model doesn't have email and the user is adding it for the very first time
         else:
             self.email = self.email
             self.user.email = self.email
             self.user.save()
 
-
+        # if user model HAS the first name , but how?? there is no way the user model can have first name already without profile having it?? 
+        # there is a special case, like user adds first name which becomes the first name of user model as well and then tries removing the first name from profile
         if fname != '':
-            if self.first_name == '':
+            if self.first_name == '':   # but the profile doesn't have
                 self.first_name = fname
             
             else:
-                self.first_name = self.first_name
+                self.first_name = self.first_name  # and profile have it as well, means the profile/firstname is probably going to be updated,
                 self.user.first_name = self.first_name
                 self.user.save()
+        
+        # if user model doesn't have first name and the user is adding it for the very first time
         else:
             self.first_name = self.first_name
             self.user.first_name = self.first_name
             self.user.save()
 
+        # if user model HAS last name
         if lname != '':
-            if self.last_name == '':
+            if self.last_name == '':   # but the profile doesn't have
                 self.last_name = lname
             
-            else:
+            else:                       # and profile have it as well, means the profile/lastname is probably going to be updated,
                 self.last_name = self.last_name
                 self.user.last_name = self.last_name
                 self.user.save()
+        
+        # if user model doesn't have last name and the user is adding it for the very first time
         else:
             self.last_name = self.last_name
             self.user.last_name = self.last_name
             self.user.save()
-
 
         self.slug = slugify( "user--" + str(self.user.id))
         super().save(*args, **kwargs)
