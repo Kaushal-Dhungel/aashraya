@@ -7,12 +7,11 @@
 *Frontend Part is written in React and is hosted on Netlify.*
 # [Go to Frontend](https://github.com/Kaushal-Dhungel/aashraya_react)
 
+## About
 
 ![main img](https://github.com/Kaushal-Dhungel/aashraya/blob/master/thumbnails/th.png)
 
 [Click here to visit the app](https://aashraya.netlify.app/)
-
-## About
 
 Aashraya is a web platform to search for rooms, hostels,apartments,homes,lands and roommates.
 Users can also advertise their properties, or themselves as roomies.
