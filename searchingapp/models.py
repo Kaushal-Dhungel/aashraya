@@ -29,7 +29,7 @@ class Item(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField()
  
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.profile.user.username}--{self.category}--{self.created.strftime('%d-%m-%Y')}"
 
     @property
@@ -63,21 +63,22 @@ class Item(models.Model):
     
 class Image(models.Model):
 
-    def generate_filename(self, filename):
+    def generate_filename(self, filename) -> str:
         url = "imgs/%s/%s" % (self.item.profile.user.username, filename)
         return url
 
     item = models.ForeignKey(Item,on_delete=models.CASCADE,related_name="images")
     image = models.ImageField(upload_to=generate_filename)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(f"{self.item}---{self.id}")
 
 
 class CartItem(models.Model):
     item = models.OneToOneField(Item,on_delete = models.CASCADE,related_name="cart_items")
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
-    def __str__(self):
+    
+    def __str__(self) -> str:
         return str(f"{self.item}---{self.profile.user.username}")
 
     

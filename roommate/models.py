@@ -51,7 +51,7 @@ class Roomie(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField()
  
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.profile.user.username}--{self.category}--{self.created.strftime('%d-%m-%Y')}"
 
     @property
@@ -83,18 +83,19 @@ class Roomie(models.Model):
 
 class RoomieImage(models.Model):
 
-    def generate_filename(self, filename):
+    def generate_filename(self, filename) -> str:
         url = "roomie/%s/%s" % (self.roomie.profile.user.username, filename)
         return url
 
     roomie = models.ForeignKey(Roomie,on_delete=models.CASCADE,related_name='images')
     image = models.ImageField(upload_to=generate_filename)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(f"{self.roomie}---{self.id}")
 
 class RoomieCartItem(models.Model):
     item = models.OneToOneField(Roomie,on_delete = models.CASCADE,related_name="cart_roomie")
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
-    def __str__(self):
+    
+    def __str__(self) -> str:
         return str(f"{self.item}---{self.profile.user.username}")

@@ -18,7 +18,7 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user.username}-{self.created.strftime('%d-%m-%Y')}"
 
     @property
