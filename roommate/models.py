@@ -72,10 +72,8 @@ class Roomie(models.Model):
  
         self.slug = slug
 
-        location = self.location.split(",")  # first separate using comma
-        location = "".join(i.strip() for i in location)
-        location = location.split(" ")      # separate using white space
-        location = "".join(i.strip() for i in location)  
+        location = self.location.replace(',','') # remove commas
+        location = location.replace(' ','')   # remove whitespaces
         
         self.location_customised = location
 

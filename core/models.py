@@ -11,10 +11,8 @@ class Popular(models.Model):
         return self.city
 
     def save(self,*args, **kwargs):
-        city = self.city.split(",")  # first separate using comma
-        city = "".join(i.strip() for i in city)
-        city = city.split(" ")      # separate using white space
-        city = "".join(i.strip() for i in city)  
+        city = self.city.replace(',','') # remove commas
+        city = city.replace(' ','')   # remove whitespaces
 
         self.city_slug = city
         super().save(*args, **kwargs)
