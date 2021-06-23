@@ -7,3 +7,5 @@ media/People
 .env 
 db.sqlite3 
 aashraya
+*.pyc
+*.pyo
