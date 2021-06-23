@@ -180,6 +180,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
+if DEBUG:
+    MEDIA_URL = "http://127.0.0.1:8000/media/"
 
 MEDIA_ROOT = BASE_DIR / 'media'
 if DEBUG == False: 

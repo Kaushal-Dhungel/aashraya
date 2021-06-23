@@ -45,7 +45,6 @@ class UserProfileView(APIView):
 
     def patch(self,request,*args, **kwargs):
         profile = Profile.objects.get(user = request.user.id)
-        print(request.data.get('first_name'))
         try:
             profile.first_name =  request.data.get('first_name',profile.first_name) 
             profile.last_name =  request.data.get('last_name',profile.last_name) 

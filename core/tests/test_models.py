@@ -26,3 +26,5 @@ class TestModel(TestCase):
     def test_city_slug(self):
         self.assertEqual(str(self.popular.city_slug),'abcdef')
 
+    def test_testimonial_str(self):
+        self.assertEqual(str(self.testi),'CEO,Aashraya')
