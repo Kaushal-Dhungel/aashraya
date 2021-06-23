@@ -48,7 +48,7 @@ class UserProfileView(APIView):
         try:
             profile.first_name =  request.data.get('first_name',profile.first_name) 
             profile.last_name =  request.data.get('last_name',profile.last_name) 
-            profile.email =  request.data.get('email',profile.email) 
+            profile.email =  profile.email if request.data.get('get_email') == "" else request.data.get('get_email')
             profile.phone =  request.data.get('phone',profile.phone) 
             profile.avatar =  profile.avatar
             profile.facebook_link =  request.data.get('facebook_link',profile.facebook_link) 
