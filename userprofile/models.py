@@ -28,3 +28,7 @@ class Profile(models.Model):
     @property
     def get_email(self):
         return self.user.email
+
+    def save(self,*args, **kwargs):
+        self.slug = slugify( "user--" + str(self.user.id))
+        super().save(*args, **kwargs) 

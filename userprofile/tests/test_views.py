@@ -23,7 +23,7 @@ class TestProfileView(APITestCase):
 
 class TestUserProfileView(APITestCase):
     def setUp(self):
-        self.user = User.objects.create(username = "testUserrrr",password = "testinguser12345")
+        self.user = User.objects.create(username = "testUserrrr",email = "abc@gm.com",password = "testinguser12345")
         self.profile = self.user.profile
         self.client.force_authenticate(user = self.user)
         self.url = reverse("userprofileview")
@@ -42,12 +42,11 @@ class TestUserProfileView(APITestCase):
         img = SimpleUploadedFile(name='elon.jpg', content=open(img_path, 'rb').read(), content_type='image/jpeg')
         data = {'action':'add_pic','avatar':img}
 
-
         res = self.client.post(self.url)
         self.assertEquals(res.status_code,200)
 
     def test_patch(self):
-        data = {'first_name':'','last_name':'','email':'','phone':"9816967736",'facebook_link':'','twitter_link':'','instagram_link':''}
+        data = {'first_name':'','last_name':'','get_email':'','phone':"9816967736",'facebook_link':'','twitter_link':'','instagram_link':''}
         res = self.client.patch(self.url,data,format = 'json')
         self.assertEquals(res.status_code,200)
 
