@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
-from django.conf.urls.static import static
 from django.views.static import serve
 from django.conf.urls import url
 from core.views import homeView
@@ -36,11 +35,13 @@ urlpatterns = [
     path('items/', include('searchingapp.urls')),
     path('mates/', include('roommate.urls')),
 
-    # path('chat/',include('chatapp.urls')),
-	url(r'^media/(?P<path>.*)$', serve,{'document_root':settings.MEDIA_ROOT}), 
-    url(r'^static/(?P<path>.*)$', serve,{'document_root':settings.STATIC_ROOT}), 
-
     path('auth/', include('drf_social_oauth2.urls', namespace='drf')),
 
-] +static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+]
 
+if settings.DEBUG:
+    # these serve the static and media files in development
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve,{'document_root':settings.MEDIA_ROOT}), 
+        url(r'^static/(?P<path>.*)$', serve,{'document_root':settings.STATIC_ROOT}), 
+    ]
