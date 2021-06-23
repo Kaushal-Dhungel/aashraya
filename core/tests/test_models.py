@@ -27,4 +27,4 @@ class TestModel(TestCase):
         self.assertEqual(str(self.popular.city_slug),'abcdef')
 
     def test_testimonial_str(self):
-        self.assertEqual(str(self.testi),'CEO,Aashraya')
+        self.assertEqual(str(self.testi),'testname -- CEO,Aashraya')
