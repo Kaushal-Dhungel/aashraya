@@ -161,9 +161,10 @@ class CartView(APIView):
         action = request.data.get("action")
         item = Item.objects.get(id = item_id)
         profile = Profile.objects.get(user = request.user.id)
-
         try:
             if action == "add":
+
+                # this makes sure that no 2 same items are save in the cart, due to Foreignkey relationship
                 cart_item, is_created = CartItem.objects.get_or_create(item = item, profile = profile)
                 
                 if is_created:
@@ -173,7 +174,7 @@ class CartView(APIView):
                     return Response({"Already exists"},status=status.HTTP_201_CREATED)
 
             else:
-                cart_item = CartItem.objects.get(item = item)
+                cart_item = CartItem.objects.get(item = item, profile = profile)
                 cart_item.delete()
                 return Response({"Removal Successful"},status=status.HTTP_200_OK)
         

@@ -174,6 +174,8 @@ class RoomieCartView(APIView):
         profile = Profile.objects.get(user = request.user.id)
         
         if action == "add":
+
+            # this makes sure that no 2 same items are save in the cart, due to Foreignkey relationship
             cart_item, is_created = RoomieCartItem.objects.get_or_create(item = item, profile = profile)
             
             if is_created:
@@ -184,6 +186,6 @@ class RoomieCartView(APIView):
                 return Response({"Already exists"},status=status.HTTP_201_CREATED)
 
         else:
-            cart_item = RoomieCartItem.objects.get(item = item)
+            cart_item = RoomieCartItem.objects.get(item = item, profile = profile)
             cart_item.delete()
             return Response({"Removal Successful"},status=status.HTTP_200_OK)

@@ -92,7 +92,11 @@ class RoomieImage(models.Model):
         return str(f"{self.roomie}---{self.id}")
 
 class RoomieCartItem(models.Model):
-    item = models.OneToOneField(Roomie,on_delete = models.CASCADE,related_name="cart_roomie")
+    """
+    item was previously OneToOne now ForeignKey because once the item is removed from cart it couldn't be added again and
+    would give Unique Constraint failed error.
+    """
+    item = models.ForeignKey(Roomie,on_delete = models.CASCADE,related_name="cart_roomie")
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
     
     def __str__(self) -> str:
