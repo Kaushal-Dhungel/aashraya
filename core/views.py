@@ -63,30 +63,18 @@ class CheckUser(APIView):
     def get(self,request,*args,**kwargs):
         username = request.query_params.get('username')
         email = request.query_params.get('email')
+        
         if email == '':    # for checking username
-            try:
-                User.objects.get(username = username)
+            if User.objects.filter(username = username).exists():
                 return Response({'True'},status=status.HTTP_200_OK)
-
-            except User.DoesNotExist:
+            else:
                 return Response({"False"},status = status.HTTP_200_OK)
-
-            except Exception as e:
-                print (e)
-                return Response({'Some error occured'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         else:   # for checking email
-            try:
-                User.objects.get(email = email)
+            if User.objects.filter(email = email).exists():
                 return Response({'True'},status=status.HTTP_200_OK)
-
-            except User.DoesNotExist:
+            else:
                 return Response({"False"},status = status.HTTP_200_OK)
-
-            except Exception as e:
-                print (e)
-                return Response({'Some error occured'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                
 
 class PopularView(APIView):
     def get(self,request,*args,**kwargs):

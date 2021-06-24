@@ -11,8 +11,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Max
 
 
-# a view only for searching/filtering the items based on location/price
 class ItemsFilterView(APIView):
+    """
+    For filtering the items using City and Price Range 
+    """
     def get(self,request,category,format= None):
         # snippets = Item.objects.filter(category = category)
         city = request.query_params.get('city')
@@ -26,7 +28,6 @@ class ItemsFilterView(APIView):
         serializer = ItemSerializer(snippets, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# for creating an item
 class ItemView(APIView):
 
     # don't think this has any use case as of now
@@ -35,6 +36,7 @@ class ItemView(APIView):
         serializer = ItemSerializer(snippets, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+    # for creating an item
     def post(self,request,format = None):
         profile = Profile.objects.get(user = request.user.id)
 

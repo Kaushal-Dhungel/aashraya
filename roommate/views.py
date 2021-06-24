@@ -9,6 +9,9 @@ from rest_framework import status
 
 
 class RoomieFilterView(APIView):
+    """
+    For filtering the roomie using City and Price Range 
+    """
     def get(self,request,category,format= None):
         city = request.query_params.get('city')
         price_range = request.query_params.get('priceRange')
@@ -31,6 +34,7 @@ class RoomieView(APIView):
         serializer = RoomieSerializer(snippets, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+    # this is for creating/listing a roomie 
     def post(self,request,format = None):
         profile = Profile.objects.get(user = request.user.id)
 
@@ -86,6 +90,7 @@ class RoomieDetailView(APIView):
         serializer = RoomieSerializer(snippets)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+    # this is for adding/removing the images of roomie
     def post(self,request, *args, **kwargs):
         item_id = request.data.get('item_id')
         roomie = Roomie.objects.get(id = item_id)
@@ -141,8 +146,11 @@ class RoomieDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# this is for fetching roomie in profile(not for userprofile) using slug, because items are fetched by default when the profile is rendered
 class RoomiePostView(APIView):
+    """
+    This is for fetching roomie in profile(not for userprofile) component using slug, 
+    because items(rooms,flats etc) are fetched by default when the profile component is rendered.
+    """
     def get(self,request,slug,format= None):
         try:
             profile = Profile.objects.get(slug = slug)
