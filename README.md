@@ -1,5 +1,10 @@
 # Aashraya
 
+**Update**
+
+*Since, Heroku discontinued it's free tier feature, the backend of this site is no longer live and can not be accessed. Hence, I have uploaded a video on YouTube showing how this works locally. The video is available here:-https://youtu.be/hvudECwNHUA*
+
+
 **Important**
 
 *The frontend and the backend of Aashraya are entirely separated and are kept in different repositories for modularity and scalability.*
@@ -7,8 +12,6 @@
 *Frontend Part is written in React and is hosted on Netlify.*
 # [Go to Frontend](https://github.com/Kaushal-Dhungel/aashraya_react)
 
-**Update**
-*Since, Heroku discontinued it's free tier feature, the backend of this site is no longer live and can not be accessed. Hence, I have uploaded a video on YouTube showing how this works locally. The video is available here:-https://youtu.be/hvudECwNHUA*
 
 ## About
 
